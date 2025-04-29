@@ -42,14 +42,17 @@ class LoginController extends AbstractController
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
         if (!$user) {
-            return new JsonResponse(['message' => 'Invalid email or password'], 401);
+            return new JsonResponse(['message' => 'Invalid email or password!!!!'], 401);
         }
 
         if (!$this->passwordHasher->isPasswordValid($user, $credentials['password'])) {
-            return new JsonResponse(['message' => 'Invalid email or password'], 401);
+            return new JsonResponse(['message' => 'Invalid email or password !!!!'], 401);
         }
 
         $token = $this->jwtManager->create($user);
+        if (!$token) {
+            return new JsonResponse(['message' => 'Failed to generate token !!!!'], 500);
+        }
 
         return new JsonResponse(['token' => $token], 200);
     }
