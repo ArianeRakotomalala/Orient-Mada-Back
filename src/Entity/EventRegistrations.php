@@ -23,13 +23,16 @@ class EventRegistrations
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\ManyToOne(inversedBy: 'event_registrations')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Users $users = null;
+    // #[ORM\ManyToOne(inversedBy: 'event_registrations')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'event_registrations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Events $events = null;
+
+    #[ORM\ManyToOne(inversedBy: 'eventRegistrations')]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -60,17 +63,17 @@ class EventRegistrations
         return $this;
     }
 
-    public function getUsers(): ?Users
-    {
-        return $this->users;
-    }
+    // public function getUser(): ?User
+    // {
+    //     return $this->user;
+    // }
 
-    public function setUsers(?Users $users): static
-    {
-        $this->users = $users;
+    // public function setUser(?User $user): static
+    // {
+    //     $this->user = $user;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getEvents(): ?Events
     {
@@ -80,6 +83,18 @@ class EventRegistrations
     public function setEvents(?Events $events): static
     {
         $this->events = $events;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

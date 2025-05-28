@@ -23,13 +23,16 @@ class InstituteRegistration
     #[ORM\Column]
     private ?bool $is_validated = null;
 
-    #[ORM\ManyToOne(inversedBy: 'institute_registrations')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Users $users = null;
+    // #[ORM\ManyToOne(inversedBy: 'institute_registrations')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'institute_registrations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Institutions $intitution = null;
+
+    #[ORM\ManyToOne(inversedBy: 'instituteRegistration')]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -60,17 +63,17 @@ class InstituteRegistration
         return $this;
     }
 
-    public function getUsers(): ?Users
-    {
-        return $this->users;
-    }
+    // public function getUser(): ?User
+    // {
+    //     return $this->user;
+    // }
 
-    public function setUsers(?Users $users): static
-    {
-        $this->users = $users;
+    // public function setUser(?User $user): static
+    // {
+    //     $this->user = $user;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getIntitution(): ?Institutions
     {
@@ -80,6 +83,18 @@ class InstituteRegistration
     public function setIntitution(?Institutions $intitution): static
     {
         $this->intitution = $intitution;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

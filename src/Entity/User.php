@@ -1,14 +1,23 @@
 <?php
 
 namespace App\Entity;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+
+#[ApiResource(
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']]
+)]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -18,6 +27,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180)]
     private ?string $email = null;
+
+    #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: "Le numéro de téléphone est obligatoire")]
+    #[Assert\Regex(
+        pattern: "/^\+?[0-9]{7,15}$/",
+        message: "Numéro de téléphone invalide"
+    )]
+    private ?string $telephone = null;
 
     /**
      * @var list<string> The user roles
@@ -30,6 +47,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UsersProfils $user_profils_id = null;
+
+    /**
+     * @var Collection<int, UserPreferences>
+     */
+    #[ORM\OneToMany(targetEntity: UserPreferences::class, mappedBy: 'user')]
+    private Collection $user_preferences;
+
+    /**
+     * @var Collection<int, Favorites>
+     */
+    #[ORM\OneToMany(targetEntity: Favorites::class, mappedBy: 'user')]
+    private Collection $favorite;
+
+    /**
+     * @var Collection<int, InformationRequests>
+     */
+    #[ORM\OneToMany(targetEntity: InformationRequests::class, mappedBy: 'user')]
+    private Collection $informationrequests;
+
+    /**
+     * @var Collection<int, EventRegistrations>
+     */
+    #[ORM\OneToMany(targetEntity: EventRegistrations::class, mappedBy: 'user')]
+    private Collection $eventRegistrations;
+
+    /**
+     * @var Collection<int, InstituteRegistration>
+     */
+    #[ORM\OneToMany(targetEntity: InstituteRegistration::class, mappedBy: 'user')]
+    private Collection $instituteRegistration;
+
+    public function __construct()
+    {
+        $this->user_preferences = new ArrayCollection();
+        $this->favorite = new ArrayCollection();
+        $this->informationrequests = new ArrayCollection();
+        $this->eventRegistrations = new ArrayCollection();
+        $this->instituteRegistration = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,6 +154,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): void
+    {
+        $this->telephone = $telephone;
+    }
 
     /**
      * @see UserInterface
@@ -104,4 +172,175 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    public function getUserProfilsId(): ?UsersProfils
+    {
+        return $this->user_profils_id;
+    }
+
+    public function setUserProfilsId(?UsersProfils $user_profils_id): static
+    {
+        $this->user_profils_id = $user_profils_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserPreferences>
+     */
+    public function getUserPreferences(): Collection
+    {
+        return $this->user_preferences;
+    }
+
+    public function addUserPreference(UserPreferences $userPreference): static
+    {
+        if (!$this->user_preferences->contains($userPreference)) {
+            $this->user_preferences->add($userPreference);
+            $userPreference->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserPreference(UserPreferences $userPreference): static
+    {
+        if ($this->user_preferences->removeElement($userPreference)) {
+            // set the owning side to null (unless already changed)
+            if ($userPreference->getUser() === $this) {
+                $userPreference->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Favorites>
+     */
+    public function getFavorite(): Collection
+    {
+        return $this->favorite;
+    }
+
+    public function addFavorite(Favorites $favorite): static
+    {
+        if (!$this->favorite->contains($favorite)) {
+            $this->favorite->add($favorite);
+            $favorite->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(Favorites $favorite): static
+    {
+        if ($this->favorite->removeElement($favorite)) {
+            // set the owning side to null (unless already changed)
+            if ($favorite->getUser() === $this) {
+                $favorite->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InformationRequests>
+     */
+    public function getInformationrequests(): Collection
+    {
+        return $this->informationrequests;
+    }
+
+    public function addInformationrequest(InformationRequests $informationrequest): static
+    {
+        if (!$this->informationrequests->contains($informationrequest)) {
+            $this->informationrequests->add($informationrequest);
+            $informationrequest->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInformationrequest(InformationRequests $informationrequest): static
+    {
+        if ($this->informationrequests->removeElement($informationrequest)) {
+            // set the owning side to null (unless already changed)
+            if ($informationrequest->getUser() === $this) {
+                $informationrequest->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventRegistrations>
+     */
+    public function getEventRegistrations(): Collection
+    {
+        return $this->eventRegistrations;
+    }
+
+    public function addEventRegistration(EventRegistrations $eventRegistration): static
+    {
+        if (!$this->eventRegistrations->contains($eventRegistration)) {
+            $this->eventRegistrations->add($eventRegistration);
+            $eventRegistration->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventRegistration(EventRegistrations $eventRegistration): static
+    {
+        if ($this->eventRegistrations->removeElement($eventRegistration)) {
+            // set the owning side to null (unless already changed)
+            if ($eventRegistration->getUser() === $this) {
+                $eventRegistration->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, InstituteRegistration>
+     */
+    public function getInstituteRegistration(): Collection
+    {
+        return $this->instituteRegistration;
+    }
+
+    public function addInstituteRegistration(InstituteRegistration $instituteRegistration): static
+    {
+        if (!$this->instituteRegistration->contains($instituteRegistration)) {
+            $this->instituteRegistration->add($instituteRegistration);
+            $instituteRegistration->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInstituteRegistration(InstituteRegistration $instituteRegistration): static
+    {
+        if ($this->instituteRegistration->removeElement($instituteRegistration)) {
+            // set the owning side to null (unless already changed)
+            if ($instituteRegistration->getUser() === $this) {
+                $instituteRegistration->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
+
+
+
+
 }
+
+
+

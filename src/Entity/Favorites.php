@@ -23,9 +23,12 @@ class Favorites
     #[ORM\Column(length: 255)]
     private ?string $collection_name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'favorites')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Users $user = null;
+    #[ORM\ManyToOne(inversedBy: 'favorite')]
+    private ?User $user = null;
+
+    // #[ORM\ManyToOne(inversedBy: 'favorites')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -56,12 +59,24 @@ class Favorites
         return $this;
     }
 
-    public function getUser(): ?Users
+    // public function getUser(): ?User
+    // {
+    //     return $this->user;
+    // }
+
+    // public function setUser(?User $user): static
+    // {
+    //     $this->user = $user;
+
+    //     return $this;
+    // }
+
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?Users $user): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 

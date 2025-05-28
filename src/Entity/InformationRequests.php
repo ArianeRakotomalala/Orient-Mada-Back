@@ -24,9 +24,9 @@ class InformationRequests
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $request_date = null;
 
-    #[ORM\ManyToOne(inversedBy: 'information_requests')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Users $user = null;
+    // #[ORM\ManyToOne(inversedBy: 'information_requests')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'information_requests')]
     #[ORM\JoinColumn(nullable: false)]
@@ -34,6 +34,9 @@ class InformationRequests
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?InformationsAnswers $information_answers = null;
+
+    #[ORM\ManyToOne(inversedBy: 'informationrequests')]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -64,17 +67,17 @@ class InformationRequests
         return $this;
     }
 
-    public function getUser(): ?Users
-    {
-        return $this->user;
-    }
+    // public function getUser(): ?User
+    // {
+    //     return $this->user;
+    // }
 
-    public function setUser(?Users $user): static
-    {
-        $this->user = $user;
+    // public function setUser(?User $user): static
+    // {
+    //     $this->user = $user;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getInstitutions(): ?Institutions
     {
@@ -96,6 +99,18 @@ class InformationRequests
     public function setInformationAnswers(?InformationsAnswers $information_answers): static
     {
         $this->information_answers = $information_answers;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
