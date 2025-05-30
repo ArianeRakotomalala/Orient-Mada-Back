@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 
 #[ApiResource(
+
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']]
 )]
@@ -23,17 +24,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank(message: "Le numéro de téléphone est obligatoire")]
-    #[Assert\Regex(
-        pattern: "/^\+?[0-9]{7,15}$/",
-        message: "Numéro de téléphone invalide"
-    )]
+    // #[Assert\Regex(
+    //     pattern: "/^\+?[0-9]{7,15}$/",
+    //     message: "Numéro de téléphone invalide"
+    // )]
     private ?string $telephone = null;
 
     /**
