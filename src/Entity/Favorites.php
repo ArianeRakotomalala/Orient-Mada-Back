@@ -1,15 +1,23 @@
 <?php
 
 namespace App\Entity;
-
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\FavoritesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: FavoritesRepository::class)]
-#[ApiResource]
-#[Broadcast]
+#[ApiResource(
+    operations: [
+        new \ApiPlatform\Metadata\Post(),
+        new \ApiPlatform\Metadata\Delete(),
+        new \ApiPlatform\Metadata\Get(),
+        new \ApiPlatform\Metadata\GetCollection()
+    ],
+    normalizationContext: ['groups' => ['favori:read']],
+    denormalizationContext: ['groups' => ['favori:write']]
+)]
 class Favorites
 {
     #[ORM\Id]
@@ -18,13 +26,16 @@ class Favorites
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $favorite_type = null;
-
-    #[ORM\Column(length: 255)]
+    #[Groups(['favori:read', 'favori:write'])]
     private ?string $collection_name = null;
 
     #[ORM\ManyToOne(inversedBy: 'favorite')]
+    #[Groups(['favori:read', 'favori:write'])] 
     private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'favorites')]
+    #[Groups(['favori:read', 'favori:write'])] 
+    private ?Institutions $institution = null;
 
     // #[ORM\ManyToOne(inversedBy: 'favorites')]
     // #[ORM\JoinColumn(nullable: false)]
@@ -35,17 +46,6 @@ class Favorites
         return $this->id;
     }
 
-    public function getFavoriteType(): ?string
-    {
-        return $this->favorite_type;
-    }
-
-    public function setFavoriteType(string $favorite_type): static
-    {
-        $this->favorite_type = $favorite_type;
-
-        return $this;
-    }
 
     public function getCollectionName(): ?string
     {
@@ -79,6 +79,18 @@ class Favorites
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getInstitution(): ?Institutions
+    {
+        return $this->institution;
+    }
+
+    public function setInstitution(?Institutions $institution): static
+    {
+        $this->institution = $institution;
 
         return $this;
     }

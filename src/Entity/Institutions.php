@@ -8,10 +8,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: InstitutionsRepository::class)]
 #[ApiResource]
-#[Broadcast]
+#[ApiFilter(SearchFilter::class, properties: [
+    'location' => 'partial',
+    'domaine' => 'partial',
+])]
 class Institutions
 {
     #[ORM\Id]
@@ -37,6 +42,10 @@ class Institutions
     #[ORM\Column(length: 255)]
     private ?string $contact = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $region = null;
+
+
     /**
      * @var Collection<int, Courses>
      */
@@ -61,12 +70,19 @@ class Institutions
     #[ORM\OneToMany(targetEntity: InformationRequests::class, mappedBy: 'institutions')]
     private Collection $information_requests;
 
+    /**
+     * @var Collection<int, Favorites>
+     */
+    #[ORM\OneToMany(targetEntity: Favorites::class, mappedBy: 'institution')]
+    private Collection $favorites;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->institute_registrations = new ArrayCollection();
         $this->information_requests = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +159,16 @@ class Institutions
     {
         $this->contact = $contact;
 
+        return $this;
+    }
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(string $region): static
+    {
+        $this->region = $region;
         return $this;
     }
 
@@ -260,6 +286,36 @@ class Institutions
             // set the owning side to null (unless already changed)
             if ($informationRequest->getInstitutions() === $this) {
                 $informationRequest->setInstitutions(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Favorites>
+     */
+    public function getFavorites(): Collection
+    {
+        return $this->favorites;
+    }
+
+    public function addFavorite(Favorites $favorite): static
+    {
+        if (!$this->favorites->contains($favorite)) {
+            $this->favorites->add($favorite);
+            $favorite->setInstitution($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(Favorites $favorite): static
+    {
+        if ($this->favorites->removeElement($favorite)) {
+            // set the owning side to null (unless already changed)
+            if ($favorite->getInstitution() === $this) {
+                $favorite->setInstitution(null);
             }
         }
 
