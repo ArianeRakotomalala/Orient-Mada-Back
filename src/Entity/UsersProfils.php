@@ -24,13 +24,7 @@ class UsersProfils
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $bacc_result = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $birthday = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $clear = null;
 
     #[ORM\Column(length: 255)]
     private ?string $adress = null;
@@ -79,17 +73,6 @@ class UsersProfils
         return $this;
     }
 
-    public function getBaccResult(): ?string
-    {
-        return $this->bacc_result;
-    }
-
-    public function setBaccResult(string $bacc_result): static
-    {
-        $this->bacc_result = $bacc_result;
-
-        return $this;
-    }
 
     public function getBirthday(): ?string
     {
@@ -99,18 +82,6 @@ class UsersProfils
     public function setBirthday(string $birthday): static
     {
         $this->birthday = $birthday;
-
-        return $this;
-    }
-
-    public function getClear(): ?string
-    {
-        return $this->clear;
-    }
-
-    public function setClear(string $clear): static
-    {
-        $this->clear = $clear;
 
         return $this;
     }

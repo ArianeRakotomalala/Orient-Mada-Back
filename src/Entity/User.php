@@ -32,10 +32,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
-)]
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
-#[UniqueEntity('email')]
+        )]
+        #[ORM\Entity(repositoryClass: UserRepository::class)]
+        #[ORM\Table(name: '`user`')]
+        #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

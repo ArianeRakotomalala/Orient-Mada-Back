@@ -23,6 +23,7 @@ class JWTLoginSuccessListener
                 'email' => $user->getUserIdentifier(),
                 'roles' => $user->getRoles(),
                 'telephone' => $user->getTelephone(),
+                'user_profils_id_id' => $user->getUserProfilsId() ? $user->getUserProfilsId()->getId() : null,
             ];
         }
 
