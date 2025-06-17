@@ -193,10 +193,7 @@ class Institutions
     public function removeCourse(Courses $course): static
     {
         if ($this->courses->removeElement($course)) {
-            // set the owning side to null (unless already changed)
-            if ($course->getInstitutions() === $this) {
-                $course->setInstitutions(null);
-            }
+            $course->setInstitutions(null);
         }
 
         return $this;

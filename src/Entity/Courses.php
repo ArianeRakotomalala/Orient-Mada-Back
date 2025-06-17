@@ -35,7 +35,7 @@ class Courses
     private ?string $admission_process = null;
 
     #[ORM\Column]
-    private ?int $fees = null;
+    private ?string $fees = null;
 
     #[ORM\Column(length: 255)]
     private ?string $languages = null;
@@ -123,12 +123,12 @@ class Courses
         return $this;
     }
 
-    public function getFees(): ?int
+    public function getFees(): ?string
     {
         return $this->fees;
     }
 
-    public function setFees(int $fees): static
+    public function setFees(string $fees): static
     {
         $this->fees = $fees;
 

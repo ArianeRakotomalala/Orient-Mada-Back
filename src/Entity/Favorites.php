@@ -6,6 +6,8 @@ use App\Repository\FavoritesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 
 #[ORM\Entity(repositoryClass: FavoritesRepository::class)]
 #[ApiResource(
@@ -18,6 +20,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['favori:read']],
     denormalizationContext: ['groups' => ['favori:write']]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact'])]
+
 class Favorites
 {
     #[ORM\Id]
