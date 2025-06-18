@@ -78,8 +78,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
 
-    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?UsersProfils $user_profils_id = null;
+    #[ORM\OneToOne(mappedBy: "user", targetEntity: UsersProfils::class)]
+    private ?UsersProfils $userProfils = null;
 
     /**
      * @var Collection<int, UserPreferences>
@@ -111,6 +111,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: InstituteRegistration::class, mappedBy: 'user')]
     private Collection $instituteRegistration;
 
+    /**
+     * @var Collection<int, Avis>
+     */
+    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'user')]
+    private Collection $institutions;
+
     public function __construct()
     {
         $this->user_preferences = new ArrayCollection();
@@ -118,6 +124,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->informationrequests = new ArrayCollection();
         $this->eventRegistrations = new ArrayCollection();
         $this->instituteRegistration = new ArrayCollection();
+        $this->institutions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,15 +222,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->plainPassword = null;
     }
 
-    public function getUserProfilsId(): ?UsersProfils
+    public function getUserProfils(): ?UsersProfils
     {
-        return $this->user_profils_id;
+        return $this->userProfils;
     }
 
-    public function setUserProfilsId(?UsersProfils $user_profils_id): static
+    public function setUserProfils(?UsersProfils $userProfils): static
     {
-        $this->user_profils_id = $user_profils_id;
-
+        $this->userProfils = $userProfils;
         return $this;
     }
 
@@ -371,6 +377,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($instituteRegistration->getUser() === $this) {
                 $instituteRegistration->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getInstitutions(): Collection
+    {
+        return $this->institutions;
+    }
+
+    public function addInstitution(Avis $institution): static
+    {
+        if (!$this->institutions->contains($institution)) {
+            $this->institutions->add($institution);
+            $institution->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInstitution(Avis $institution): static
+    {
+        if ($this->institutions->removeElement($institution)) {
+            // set the owning side to null (unless already changed)
+            if ($institution->getUser() === $this) {
+                $institution->setUser(null);
             }
         }
 

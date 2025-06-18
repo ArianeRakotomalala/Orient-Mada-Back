@@ -79,6 +79,12 @@ class Institutions
     #[ORM\Column(length: 255)]
     private ?string $src_img = null;
 
+    /**
+     * @var Collection<int, Avis>
+     */
+    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'institutions')]
+    private Collection $avis;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
@@ -86,6 +92,7 @@ class Institutions
         $this->institute_registrations = new ArrayCollection();
         $this->information_requests = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->avis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -330,6 +337,36 @@ class Institutions
     public function setSrcImg(string $src_img): static
     {
         $this->src_img = $src_img;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $avi->setInstitutions($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            // set the owning side to null (unless already changed)
+            if ($avi->getInstitutions() === $this) {
+                $avi->setInstitutions(null);
+            }
+        }
 
         return $this;
     }

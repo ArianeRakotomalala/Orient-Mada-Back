@@ -45,14 +45,9 @@ class UsersProfils
     #[ORM\Column(length: 255)]
     private ?string $serie = null;
 
-    #[ORM\OneToOne(mappedBy: 'user_profils_id', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: "userProfils", cascade: ["persist", "remove"])]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: true, onDelete: "CASCADE")]
     private ?User $user = null;
-
-    // #[ORM\OneToOne(mappedBy: 'user_profils', cascade: ['persist', 'remove'])]
-    // private ?User $user = null;
-
-    // #[ORM\OneToOne(mappedBy: 'user_profils', cascade: ['persist', 'remove'])]
-    // private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -132,45 +127,6 @@ class UsersProfils
         return $this;
     }
 
-    // public function getUser(): ?User
-    // {
-    //     return $this->user;
-    // }
-
-    // public function setUser(User $user): static
-    // {
-    //     // set the owning side of the relation if necessary
-    //     if ($user->getUserProfil() !== $this) {
-    //         $user->setUserProfil($this);
-    //     }
-
-    //     $this->user = $user;
-
-    //     return $this;
-    // }
-
-    // // public function getUser(): ?User
-    // {
-    //     return $this->user;
-    // }
-
-    // public function setUser(?User $user): static
-    // {
-    //     // unset the owning side of the relation if necessary
-    //     if ($user === null && $this->user !== null) {
-    //         $this->user->setUserProfils(null);
-    //     }
-
-    //     // set the owning side of the relation if necessary
-    //     if ($user !== null && $user->getUserProfils() !== $this) {
-    //         $user->setUserProfils($this);
-    //     }
-
-    //     $this->user = $user;
-
-    //     return $this;
-    // }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -178,18 +134,7 @@ class UsersProfils
 
     public function setUser(?User $user): static
     {
-        // unset the owning side of the relation if necessary
-        if ($user === null && $this->user !== null) {
-            $this->user->setUserProfilsId(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($user !== null && $user->getUserProfilsId() !== $this) {
-            $user->setUserProfilsId($this);
-        }
-
         $this->user = $user;
-
         return $this;
     }
 }

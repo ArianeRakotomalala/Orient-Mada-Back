@@ -9,7 +9,6 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: EventRegistrationsRepository::class)]
 #[ApiResource]
-#[Broadcast]
 class EventRegistrations
 {
     #[ORM\Id]
@@ -17,11 +16,10 @@ class EventRegistrations
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $registration_date = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+
+    #[ORM\Column]
+    private ?bool $status = null;
 
     // #[ORM\ManyToOne(inversedBy: 'event_registrations')]
     // #[ORM\JoinColumn(nullable: false)]
@@ -39,24 +37,14 @@ class EventRegistrations
         return $this->id;
     }
 
-    public function getRegistrationDate(): ?string
-    {
-        return $this->registration_date;
-    }
+    
 
-    public function setRegistrationDate(string $registration_date): static
-    {
-        $this->registration_date = $registration_date;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
+    public function getStatus(): ?bool
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(bool $status): static
     {
         $this->status = $status;
 
