@@ -76,6 +76,9 @@ class Institutions
     #[ORM\OneToMany(targetEntity: Favorites::class, mappedBy: 'institution')]
     private Collection $favorites;
 
+    #[ORM\Column(length: 255)]
+    private ?string $src_img = null;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
@@ -315,6 +318,18 @@ class Institutions
                 $favorite->setInstitution(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSrcImg(): ?string
+    {
+        return $this->src_img;
+    }
+
+    public function setSrcImg(string $src_img): static
+    {
+        $this->src_img = $src_img;
 
         return $this;
     }

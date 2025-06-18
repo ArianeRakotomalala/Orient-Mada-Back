@@ -6,10 +6,20 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UsersProfilsRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
 
 #[ORM\Entity(repositoryClass: UsersProfilsRepository::class)]
-#[ApiResource]
-#[Broadcast]
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Post(),
+        new Get(),
+        new Patch(),
+    ]
+)]
 class UsersProfils
 {
     #[ORM\Id]
