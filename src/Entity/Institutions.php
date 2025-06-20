@@ -12,7 +12,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: InstitutionsRepository::class)]
-#[ApiResource]
+#[ApiResource(paginationEnabled: false)]
 #[ApiFilter(SearchFilter::class, properties: [
     'location' => 'partial',
     'domaine' => 'partial',
@@ -77,13 +77,18 @@ class Institutions
     private Collection $favorites;
 
     #[ORM\Column(length: 255)]
-    private ?string $src_img = null;
+    private ?string $logo = null;
 
     /**
      * @var Collection<int, Avis>
      */
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'institutions')]
     private Collection $avis;
+
+
+
+    #[ORM\Column(length: 255)]
+    private ?string $src_img = null;
 
     public function __construct()
     {
@@ -329,14 +334,14 @@ class Institutions
         return $this;
     }
 
-    public function getSrcImg(): ?string
+    public function getLogo(): ?string
     {
-        return $this->src_img;
+        return $this->logo;
     }
 
-    public function setSrcImg(string $src_img): static
+    public function setLogo(string $logo): static
     {
-        $this->src_img = $src_img;
+        $this->logo = $logo;
 
         return $this;
     }
@@ -370,4 +375,18 @@ class Institutions
 
         return $this;
     }
+
+    public function getSrcImg(): ?string
+    {
+        return $this->src_img;
+    }
+
+    public function setSrcImg(string $src_img): static
+    {
+        $this->src_img = $src_img;
+
+        return $this;
+    }
+
+   
 }

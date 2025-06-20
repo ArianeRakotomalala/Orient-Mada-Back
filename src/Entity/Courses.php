@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: CoursesRepository::class)]
-#[ApiResource]
+#[ApiResource(paginationEnabled: false,)]
 #[Broadcast]
 class Courses
 {
@@ -52,6 +52,9 @@ class Courses
      */
     #[ORM\OneToMany(targetEntity: Testimonials::class, mappedBy: 'courses')]
     private Collection $testimonials;
+
+    #[ORM\ManyToOne(inversedBy: 'courses')]
+    private ?Domaine $domaine = null;
 
     public function __construct()
     {
@@ -197,6 +200,18 @@ class Courses
                 $testimonial->setCourses(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDomaine(): ?Domaine
+    {
+        return $this->domaine;
+    }
+
+    public function setDomaine(?Domaine $domaine): static
+    {
+        $this->domaine = $domaine;
 
         return $this;
     }
