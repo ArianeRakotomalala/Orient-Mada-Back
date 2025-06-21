@@ -28,8 +28,6 @@ class Events
     #[ORM\Column]
     private ?\DateTimeImmutable $event_date_time = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $registration_parameters = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -43,6 +41,15 @@ class Events
      */
     #[ORM\OneToMany(targetEntity: EventRegistrations::class, mappedBy: 'events')]
     private Collection $event_registrations;
+
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $participant = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $lieu = null;
 
     public function __construct()
     {
@@ -86,18 +93,6 @@ class Events
     public function setEventDateTime(\DateTimeImmutable $event_date_time): static
     {
         $this->event_date_time = $event_date_time;
-
-        return $this;
-    }
-
-    public function getRegistrationParameters(): ?string
-    {
-        return $this->registration_parameters;
-    }
-
-    public function setRegistrationParameters(string $registration_parameters): static
-    {
-        $this->registration_parameters = $registration_parameters;
 
         return $this;
     }
@@ -152,6 +147,42 @@ class Events
                 $eventRegistration->setEvents(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getParticipant(): ?string
+    {
+        return $this->participant;
+    }
+
+    public function setParticipant(string $participant): static
+    {
+        $this->participant = $participant;
+
+        return $this;
+    }
+
+    public function getLieu(): ?string
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(string $lieu): static
+    {
+        $this->lieu = $lieu;
 
         return $this;
     }

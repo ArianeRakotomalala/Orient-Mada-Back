@@ -7,53 +7,71 @@ use App\Repository\CoursesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: CoursesRepository::class)]
-#[ApiResource(paginationEnabled: false,)]
+#[ApiResource(
+    paginationEnabled: false,
+    normalizationContext: ['groups' => ['courses:read']],
+    denormalizationContext: ['groups' => ['courses:write']]
+)]
 #[Broadcast]
 class Courses
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['courses:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?string $duration = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?string $degree = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?string $prerequisites = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?string $admission_process = null;
 
     #[ORM\Column]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?string $fees = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?string $languages = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?string $career_prospects = null;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?Institutions $institutions = null;
 
     /**
      * @var Collection<int, Testimonials>
      */
     #[ORM\OneToMany(targetEntity: Testimonials::class, mappedBy: 'courses')]
+    #[Groups(['courses:read'])]
     private Collection $testimonials;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['courses:read', 'courses:write'])]
     private ?Domaine $domaine = null;
 
     public function __construct()
