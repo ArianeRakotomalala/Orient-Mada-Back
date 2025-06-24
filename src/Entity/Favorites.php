@@ -4,7 +4,6 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\FavoritesRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
@@ -27,18 +26,19 @@ class Favorites
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['favori:read', 'favori:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['favori:read', 'favori:write'])]
+    #[Groups(['favori:read', 'favori:write', 'avp:read', 'avp:write'])]
     private ?string $collection_name = null;
 
     #[ORM\ManyToOne(inversedBy: 'favorite')]
-    #[Groups(['favori:read', 'favori:write'])] 
+    #[Groups(['favori:read', 'favori:write', 'avp:read', 'avp:write'])] 
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'favorites')]
-    #[Groups(['favori:read', 'favori:write'])] 
+    #[Groups(['favori:read', 'favori:write', 'avp:read', 'avp:write'])] 
     private ?Institutions $institution = null;
 
     // #[ORM\ManyToOne(inversedBy: 'favorites')]

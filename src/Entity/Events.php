@@ -7,48 +7,60 @@ use App\Repository\EventsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Annotation\Groups as SerializerGroups;
 
 #[ORM\Entity(repositoryClass: EventsRepository::class)]
-#[ApiResource]
-#[Broadcast]
+#[ApiResource(
+    normalizationContext: ['groups' => ['events:read']],
+    denormalizationContext: ['groups' => ['events:write']]
+)]
 class Events
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?\DateTimeImmutable $event_date_time = null;
 
-
     #[ORM\Column]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?Institutions $institution = null;
 
     /**
      * @var Collection<int, EventRegistrations>
      */
     #[ORM\OneToMany(targetEntity: EventRegistrations::class, mappedBy: 'events')]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private Collection $event_registrations;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?string $participant = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?string $lieu = null;
 
     public function __construct()

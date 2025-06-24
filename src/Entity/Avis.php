@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AvisRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AvisRepository::class)]
 #[ApiResource]
@@ -13,6 +14,7 @@ class Avis
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['avis:read', 'avis:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
 

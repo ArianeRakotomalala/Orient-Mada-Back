@@ -7,42 +7,61 @@ use App\Repository\InstitutionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\Put;
 
 #[ORM\Entity(repositoryClass: InstitutionsRepository::class)]
-#[ApiResource(paginationEnabled: false)]
+#[ApiResource(
+    paginationEnabled: false,
+    operations: [
+        new \ApiPlatform\Metadata\Get(),
+        new \ApiPlatform\Metadata\GetCollection(),
+        new \ApiPlatform\Metadata\Post(),
+        new \ApiPlatform\Metadata\Delete(),
+        new \ApiPlatform\Metadata\Patch(),
+        new Put(),
+    ],
+    normalizationContext: ['groups' => ['institutions:read']],
+    denormalizationContext: ['groups' => ['institutions:write', 'avp:write']]
+)]
 #[ApiFilter(SearchFilter::class, properties: [
     'location' => 'partial',
     'domaine' => 'partial',
+    
 ])]
 class Institutions
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['institutions:read', 'institutions:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['institutions:read', 'institutions:write', 'avp:read', 'avp:write'])]
     private ?string $institution_name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['institutions:read', 'institutions:write', 'avp:read', 'avp:write'])]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['institutions:read', 'institutions:write', 'avp:read', 'avp:write'])]
     private ?string $location = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['institutions:read', 'institutions:write', 'avp:read', 'avp:write'])]
     private ?string $history = null;
 
+    
     #[ORM\Column(length: 255)]
-    private ?string $infrastructure = null;
-
-    #[ORM\Column(length: 255)]
+    #[Groups(['institutions:read', 'institutions:write', 'avp:read', 'avp:write'])]
     private ?string $contact = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['institutions:read', 'institutions:write', 'avp:read', 'avp:write'])]
     private ?string $region = null;
 
 
@@ -77,6 +96,7 @@ class Institutions
     private Collection $favorites;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['institutions:read', 'institutions:write', 'avp:read', 'avp:write'])]
     private ?string $logo = null;
 
     /**
@@ -88,6 +108,7 @@ class Institutions
 
 
     #[ORM\Column(length: 255)]
+    #[Groups(['institutions:read', 'institutions:write', 'avp:read', 'avp:write'])]
     private ?string $src_img = null;
 
     public function __construct()
@@ -153,17 +174,7 @@ class Institutions
         return $this;
     }
 
-    public function getInfrastructure(): ?string
-    {
-        return $this->infrastructure;
-    }
-
-    public function setInfrastructure(string $infrastructure): static
-    {
-        $this->infrastructure = $infrastructure;
-
-        return $this;
-    }
+ 
 
     public function getContact(): ?string
     {

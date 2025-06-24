@@ -5,38 +5,48 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserPreferencesRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserPreferencesRepository::class)]
-#[ApiResource]
-#[Broadcast]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user_preferences:read']],
+    denormalizationContext: ['groups' => ['user_preferences:write']]
+)]
 class UserPreferences
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user_preferences:read', 'user_preferences:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user_preferences:read', 'user_preferences:write', 'avp:read', 'avp:write'])]
     private ?string $field_study = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user_preferences:read', 'user_preferences:write', 'avp:read', 'avp:write'])]
     private ?string $type_of_institution = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user_preferences:read', 'user_preferences:write', 'avp:read', 'avp:write'])]
     private ?string $location = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user_preferences:read', 'user_preferences:write', 'avp:read', 'avp:write'])]
     private ?string $max_coast = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user_preferences:read', 'user_preferences:write', 'avp:read', 'avp:write'])]
     private ?string $prefered_language = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user_preferences:read', 'user_preferences:write', 'avp:read', 'avp:write'])]
     private ?string $min_success_rate = null;
 
     #[ORM\ManyToOne(inversedBy: 'user_preferences')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['user_preferences:read', 'user_preferences:write', 'avp:read', 'avp:write'])]
     private ?User $user = null;
 
     // #[ORM\ManyToOne(inversedBy: 'user_preferences')]

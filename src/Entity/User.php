@@ -41,15 +41,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:create', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['user:read', 'user:create'])]
+    #[Groups(['user:read', 'user:create', 'avp:read', 'avp:write'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
-    #[Groups(['user:write', 'user:create', 'user:update'])]
+    #[Groups(['user:write', 'user:create', 'user:update', 'avp:read', 'avp:write'])]
     #[Assert\NotBlank(message: "Le numéro de téléphone est obligatoire")]
     #[Assert\Regex(
         pattern: "/^\+?[0-9]{7,15}$/",
@@ -62,18 +62,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column(type: 'json')]
-    #[Groups(['user:create', 'user:update'])]
+    #[Groups(['user:create', 'user:update', 'avp:read', 'avp:write'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
-
+    #[Groups(['avp:read', 'avp:write'])]
     private ?string $password = null;
 
     // #[Assert\NotBlank(groups: ['user:create'])]
-    #[Groups(['user:create', 'user:update'])]
+    #[Groups(['user:create', 'user:update', 'avp:read', 'avp:write'])]
     private ?string $plainPassword = null;
 
 
@@ -116,6 +116,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'user')]
     private Collection $institutions;
+
+    #[ORM\Column]
+    #[Groups(['avp:read', 'avp:write'])]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if ($this->created_at === null) {
+            $this->created_at = new \DateTimeImmutable();
+        }
+    }
 
     public function __construct()
     {
@@ -409,6 +421,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $institution->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }

@@ -5,22 +5,27 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\InstituteRegistrationRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: InstituteRegistrationRepository::class)]
-#[ApiResource]
-#[Broadcast]
+#[ApiResource(
+    normalizationContext: ['groups' => ['institute_registrations:read']],
+    denormalizationContext: ['groups' => ['institute_registrations:write']]
+)]
 class InstituteRegistration
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['institute_registrations:read', 'institute_registrations:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['institute_registrations:read', 'institute_registrations:write', 'avp:read', 'avp:write'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
+    #[Groups(['institute_registrations:read', 'institute_registrations:write', 'avp:read', 'avp:write'])]
     private ?bool $is_validated = null;
 
     // #[ORM\ManyToOne(inversedBy: 'institute_registrations')]
@@ -29,9 +34,11 @@ class InstituteRegistration
 
     #[ORM\ManyToOne(inversedBy: 'institute_registrations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['institute_registrations:read', 'institute_registrations:write', 'avp:read', 'avp:write'])]
     private ?Institutions $intitution = null;
 
     #[ORM\ManyToOne(inversedBy: 'instituteRegistration')]
+    #[Groups(['institute_registrations:read', 'institute_registrations:write', 'avp:read', 'avp:write'])]
     private ?User $user = null;
 
     public function getId(): ?int

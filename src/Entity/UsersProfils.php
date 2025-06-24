@@ -5,11 +5,11 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UsersProfilsRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UsersProfilsRepository::class)]
 #[ApiResource(
@@ -25,28 +25,36 @@ class UsersProfils
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['users_profils:read', 'users_profils:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['users_profils:read', 'users_profils:write', 'avp:read', 'avp:write'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['users_profils:read', 'users_profils:write', 'avp:read', 'avp:write'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['users_profils:read', 'users_profils:write', 'avp:read', 'avp:write'])]
     private ?string $birthday = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['users_profils:read', 'users_profils:write', 'avp:read', 'avp:write'])]
     private ?string $adress = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['users_profils:read', 'users_profils:write', 'avp:read', 'avp:write'])]
     private ?string $hobbies = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['users_profils:read', 'users_profils:write', 'avp:read', 'avp:write'])]
     private ?string $serie = null;
 
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: "userProfils", cascade: ["persist", "remove"])]
     #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: true, onDelete: "CASCADE")]
+    #[Groups(['users_profils:read', 'users_profils:write', 'avp:read', 'avp:write'])]
     private ?User $user = null;
 
     public function getId(): ?int

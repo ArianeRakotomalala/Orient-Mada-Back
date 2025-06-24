@@ -6,29 +6,36 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TestimonialsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TestimonialsRepository::class)]
-#[ApiResource]
-#[Broadcast]
+#[ApiResource(
+    normalizationContext: ['groups' => ['testimonials:read']],
+    denormalizationContext: ['groups' => ['testimonials:write']]
+)]
 class Testimonials
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['testimonials:read', 'testimonials:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['testimonials:read', 'testimonials:write', 'avp:read', 'avp:write'])]
     private ?string $author = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['testimonials:read', 'testimonials:write', 'avp:read', 'avp:write'])]
     private ?\DateTimeInterface $publication_date = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['testimonials:read', 'testimonials:write', 'avp:read', 'avp:write'])]
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'testimonials')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['testimonials:read', 'testimonials:write', 'avp:read', 'avp:write'])]
     private ?Courses $courses = null;
 
     public function getId(): ?int

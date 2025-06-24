@@ -6,22 +6,27 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\InformationRequestsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: InformationRequestsRepository::class)]
-#[ApiResource]
-#[Broadcast]
+#[ApiResource(
+    normalizationContext: ['groups' => ['information_requests:read']],
+    denormalizationContext: ['groups' => ['information_requests:write']]
+)]
 class InformationRequests
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['information_requests:read', 'information_requests:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['information_requests:read', 'information_requests:write', 'avp:read', 'avp:write'])]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['information_requests:read', 'information_requests:write', 'avp:read', 'avp:write'])]
     private ?\DateTimeInterface $request_date = null;
 
     // #[ORM\ManyToOne(inversedBy: 'information_requests')]
@@ -30,12 +35,15 @@ class InformationRequests
 
     #[ORM\ManyToOne(inversedBy: 'information_requests')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['information_requests:read', 'information_requests:write', 'avp:read', 'avp:write'])]
     private ?Institutions $institutions = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['information_requests:read', 'information_requests:write', 'avp:read', 'avp:write'])]
     private ?InformationsAnswers $information_answers = null;
 
     #[ORM\ManyToOne(inversedBy: 'informationrequests')]
+    #[Groups(['information_requests:read', 'information_requests:write', 'avp:read', 'avp:write'])]
     private ?User $user = null;
 
     public function getId(): ?int

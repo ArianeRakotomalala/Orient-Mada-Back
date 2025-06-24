@@ -8,70 +8,102 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Put;
+
 
 #[ORM\Entity(repositoryClass: CoursesRepository::class)]
 #[ApiResource(
     paginationEnabled: false,
     normalizationContext: ['groups' => ['courses:read']],
-    denormalizationContext: ['groups' => ['courses:write']]
+    denormalizationContext: ['groups' => ['courses:write']],
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => ['courses:read']],
+            denormalizationContext: ['groups' => ['courses:write']]
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['courses:read']],
+            denormalizationContext: ['groups' => ['courses:write']]
+        ),
+        new Post(
+            normalizationContext: ['groups' => ['courses:read']],
+            denormalizationContext: ['groups' => ['courses:write']]
+        ),
+        new Patch(
+            normalizationContext: ['groups' => ['courses:read']],
+            denormalizationContext: ['groups' => ['courses:write']]
+        ),
+        new Delete(
+            normalizationContext: ['groups' => ['courses:read']],
+            denormalizationContext: ['groups' => ['courses:write']]
+        ),
+        new Put(
+            normalizationContext: ['groups' => ['courses:read']],
+            denormalizationContext: ['groups' => ['courses:write']]
+        ),
+    ]
 )]
-#[Broadcast]
+
 class Courses
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['courses:read'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?string $duration = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?string $degree = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?string $prerequisites = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?string $admission_process = null;
 
     #[ORM\Column]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?string $fees = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?string $languages = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?string $career_prospects = null;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?Institutions $institutions = null;
 
     /**
      * @var Collection<int, Testimonials>
      */
     #[ORM\OneToMany(targetEntity: Testimonials::class, mappedBy: 'courses')]
-    #[Groups(['courses:read'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private Collection $testimonials;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['courses:read', 'courses:write'])]
+    #[Groups(['courses:read', 'courses:write', 'avp:read', 'avp:write'])]
     private ?Domaine $domaine = null;
 
     public function __construct()
