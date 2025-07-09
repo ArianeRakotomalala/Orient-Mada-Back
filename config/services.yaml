@@ -30,3 +30,7 @@ services:
             $processor: '@api_platform.doctrine.orm.state.persist_processor'
             $passwordHasher: '@security.user_password_hasher'
             $mailerService: '@App\Service\MailerService'
+
+    App\EventListener\JWTCreatedListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }

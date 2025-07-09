@@ -13,7 +13,15 @@ use Symfony\Component\Serializer\Annotation\Groups as SerializerGroups;
 #[ORM\Entity(repositoryClass: EventsRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['events:read']],
-    denormalizationContext: ['groups' => ['events:write']]
+    denormalizationContext: ['groups' => ['events:write']],
+    operations: [
+        new \ApiPlatform\Metadata\Get(),
+        new \ApiPlatform\Metadata\GetCollection(),
+        new \ApiPlatform\Metadata\Post(),
+        new \ApiPlatform\Metadata\Patch(),
+        new \ApiPlatform\Metadata\Delete(),
+        new \ApiPlatform\Metadata\Put(),
+    ]
 )]
 class Events
 {
@@ -35,7 +43,7 @@ class Events
     #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?\DateTimeImmutable $event_date_time = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     #[Groups(['events:read', 'events:write', 'avp:read', 'avp:write'])]
     private ?\DateTimeImmutable $created_at = null;
 
@@ -66,6 +74,7 @@ class Events
     public function __construct()
     {
         $this->event_registrations = new ArrayCollection();
+        $this->created_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int

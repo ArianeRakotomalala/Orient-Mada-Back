@@ -49,12 +49,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
-    #[Groups(['user:write', 'user:create', 'user:update', 'avp:read', 'avp:write'])]
+    #[Groups(['user:read', 'user:write', 'user:create', 'user:update', 'avp:read', 'avp:write'])]
     #[Assert\NotBlank(message: "Le numéro de téléphone est obligatoire")]
     #[Assert\Regex(
         pattern: "/^\+?[0-9]{7,15}$/",
         message: "Numéro de téléphone invalide",
-        groups: ['user:create']
     )]
     private ?string $telephone = null;
 
@@ -62,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column(type: 'json')]
-    #[Groups(['user:create', 'user:update', 'avp:read', 'avp:write'])]
+    #[Groups(['user:read', 'user:create', 'user:update', 'avp:read', 'avp:write'])]
     private array $roles = [];
 
     /**
@@ -117,17 +116,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'user')]
     private Collection $institutions;
 
-    #[ORM\Column]
-    #[Groups(['avp:read', 'avp:write'])]
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Groups(['user:read', 'user:create', 'user:update', 'avp:read', 'avp:write'])]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\PrePersist]
-    public function setCreatedAtValue(): void
-    {
-        if ($this->created_at === null) {
-            $this->created_at = new \DateTimeImmutable();
-        }
-    }
+
 
     public function __construct()
     {
@@ -137,6 +130,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->eventRegistrations = new ArrayCollection();
         $this->instituteRegistration = new ArrayCollection();
         $this->institutions = new ArrayCollection();
+        if ($this->created_at === null) {
+            $this->created_at = new \DateTimeImmutable();
+        }
     }
 
     public function getId(): ?int
