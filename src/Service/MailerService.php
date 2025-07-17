@@ -21,11 +21,15 @@ class MailerService
             ->to($user->getEmail())
             ->subject('Bienvenue sur OrientMada')
             ->html("
-                Bonjour,<br><br>
-                Merci de t’être inscrit sur <strong>OrientMada</strong> !<br>
-                Découvre maintenant les formations faites pour toi ✨<br><br>
-                <a href='http://localhost:5173/login'>Se connecter</a><br><br>
-                À bientôt !
+                Bonjour et bienvenue sur <strong>OrientMada</strong> !<br><br>
+                Nous vous remercions pour votre inscription.<br>
+                Vous pouvez dès à présent découvrir les formations et opportunités qui vous correspondent.<br><br>
+                Pour accéder à votre espace personnel, cliquez sur le lien ci-dessous :<br>
+                <a href='http://localhost:5173/login'>Se connecter à mon compte</a><br><br>
+                À très bientôt sur OrientMada !<br>
+                Cordialement,<br>
+                L’équipe OrientMada<br><br>
+                &copy; OrientMada 2025. Tous droits réservés.
             ");
 
         $this->mailer->send($email);

@@ -57,6 +57,12 @@ class UsersProfils
     #[Groups(['users_profils:read', 'users_profils:write', 'avp:read', 'avp:write'])]
     private ?User $user = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $region = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $frais_formation = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -143,6 +149,30 @@ class UsersProfils
     public function setUser(?User $user): static
     {
         $this->user = $user;
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): static
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getFraisFormation(): ?string
+    {
+        return $this->frais_formation;
+    }
+
+    public function setFraisFormation(?string $frais_formation): static
+    {
+        $this->frais_formation = $frais_formation;
+
         return $this;
     }
 }
